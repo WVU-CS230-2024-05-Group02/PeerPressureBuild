@@ -125,12 +125,20 @@ app.get("/api/currentGrade", async (req, res) => {
     
     let course = thisCourses[index];
     let evals = []
-    for(let i = 0; i < course.evalIDs.length; i++){
-        let eval = await Evaluation.findOne(
-            {evaluationID: course.evalIDs[i]}
-        );
-        evals.push(eval);
-    };
+
+    try{
+        for(let i = 0; i < course.evalIDs.length; i++){
+            let eval = await Evaluation.findOne(
+                {evaluationID: course.evalIDs[i]}
+            );
+            evals.push(eval);
+        };
+    } catch { // Runs if there are no evaluations
+        res.json(100);
+        return;
+    }
+
+
 
     let userIndex = 0;
     for(let i = 0; i < course.studentIDs.length; i++){
